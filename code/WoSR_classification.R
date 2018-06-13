@@ -1,14 +1,22 @@
+#============================================================================
+#' WoSR - Classification software
+#' description: 
+#' data from: http://groupware.les.inf.puc-rio.br/har
+#' department: Science and Enabling Units IT
+#' contacts: fruzsina.soltesz@astrazeneca.com; david.greatrex@astrazeneca.com
+#' Last modified: 13-06-2018
+#============================================================================
 
-# data from:
-# http://groupware.les.inf.puc-rio.br/har
-# there is a reference in there
+#============================================================================
+# Set repository URL (ensure url points to local respository location)
+#============================================================================
+WoSR <- "C:/Users/kwsp220/Box Sync/projects/cambridge_team/conference/WoSR/WoSR"
+setwd(WoSR)
 
-# =====================================================================
+#============================================================================
 # Environment and parameter setting
-# =====================================================================
-
-# Environment setup
-library(plyr)         # has to be loaded before dplyr
+#============================================================================
+library(plyr)
 library(dplyr)
 library(knitr)
 library(caret)
@@ -18,21 +26,32 @@ library(rattle)
 library(randomForest)
 set.seed(35)
 
-# set parameters
-train.source <- 
-    "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
-test.source  <- 
-    "http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+#============================================================================
+# load data
+#============================================================================
+# list files in data respository
+f <- list.files("data/")
+
+# load all csv files into list
+dat <- lapply(f[endsWith(f, ".csv")], FUN = function(x){
+  
+  # load and process each csv file
+  tmp <- read.csv(paste0("data/",f[1]))
+  rownames(tmp) <- tmp$X
+  tmp
+  
+})
+names(dat) <- f
+
+# set train and test datafiles
+train <- dat$`pml-training.csv`
+test <- dat$`pml-testing.csv`
+
 
 # =====================================================================
-# Data acquisition and preparation
+# Explore and prepare training data
 # =====================================================================
-
-# download the datasets
-train <- read.csv(url(train.source))
-testing  <- read.csv(url(test.source))
-
-# look at data dimensions and factor names
+# look at data dimensions and feature names
 dim(train)
 names(train)
 
