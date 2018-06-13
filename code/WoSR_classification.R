@@ -36,10 +36,8 @@ f <- list.files("data/")
 dat <- lapply(f[endsWith(f, ".csv")], FUN = function(x){
   
   # load and process each csv file
-  tmp <- read.csv(paste0("data/",f[1]))
-  rownames(tmp) <- tmp$X
-  tmp
-  
+  tmp <- read.csv(paste0("data/", x), row.names = 1)
+
 })
 names(dat) <- f
 
